@@ -1,19 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./index.css">
+  <link href="https://unpkg.com/video.js@7.10.2/dist/video-js.min.css" rel="stylesheet" />
 
-    <script src="./index.js"></script>
+  <!-- 如果要支持IE8，请使用v7之前的video.js，并且引入下面这个js链接。-->
+  <!-- <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
 </head>
 
 <body>
+  <video id="my-player" class="video-js">
+    <!-- <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" /> -->
+  </video>
 
-    <h1>我是说一个便签</h1>
+  <div id="choices-container">
+    <button id="choice1">选择1</button>
+    <button id="choice2">选择2</button>
+    <button id="choice3">选择3</button>
+  </div>
+
+  <script src="https://unpkg.com/video.js@7.10.2/dist/video.min.js"></script>
+  <script>
+    let choicesContainer = document.getElementById('choices-container');
+    choicesContainer.style.display = 'none'
+    let targetTime = 5; // 指定的播放时间（秒）
+
+
+    let choice1Button = document.getElementById('choice1');
+    let choice2Button = document.getElementById('choice2');
+    let choice3Button = document.getElementById('choice3');
+    let options = {
+      controls: true,
+      autoplay: false,
+      loop: false
+    };
+    let player = videojs('my-player', options);
+
+    player.on('timeupdate', function () {
+      let currentTime = player.currentTime();
+      console.log(currentTime, 'currentTime');
+      console.log(targetTime, 'targetTime');
+
+      if (currentTime >= targetTime && currentTime < 20) {
+        showChoices();
+        // 暂停视频
+        player.pause();
+      }
+    });
+
+    choice1Button.addEventListener('click', function () {
+      jumpToTime(20); // 跳转到时间点10秒
+    });
+
+    choice2Button.addEventListener('click', function () {
+      jumpToTime(40); // 跳转到时间点20秒
+    });
+
+    choice3Button.addEventListener('click', function () {
+      playVideo('https://apiive-v3.ctrlvideo.com/data/skyfall/media/65/21565/video/1215658259017490/source_preview.mp4'); // 播放视频
+    });
+
+    function jumpToTime(time) {
+      player.currentTime(time);
+      player.play(); // 播放视频
+    }
+
+    function showChoices() {
+      choicesContainer.style.display = 'block';
+    }
+
+    function playVideo(videoSrc) {
+      player.src(videoSrc);
+      player.play(); // 播放视频
+    }
+
+    player.src('http://vjs.zencdn.net/v/oceans.mp4')
+
+
+  </script>
 </body>
-
-</html>
